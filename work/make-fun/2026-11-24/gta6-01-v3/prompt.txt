@@ -1,0 +1,29 @@
+Kamu builder untuk bounty make.fun gta6-01 "Make GTA 6" ($1,666, tutup 22:00 WIB Senin 24 Nov 2026). RECORDER SUDAH JALAN sejak 23:40 WIB — recording id 01a20947-79c0-7023-8b73-fdf5e5c43a28, repo ~/workspace/make-fun/2026-11-23/gta6-01/build. Session kamu dimulai SETELAH recording — jangan ulangi/re-use session lain. Semua yang kamu tulis di repo ini direkam; jaga supaya semua file terhitung ditulis/di-edit oleh kamu di session ini.
+
+KONTEKS WAJIB (baca dulu):
+- Kit: ~/workspace/make-fun/2026-11-23/gta6-01/kit/gta6-01-kit/ — competition.yaml di sana. JANGAN PERNAH baca RULES.txt. Pakai competition.yaml + brief ini saja.
+- competition.yaml: STRICT transcripts (strict_transcripts=true). Quota 5/hari, 10 total, Force_Last. Hadiah top 100 (1st $500). Judge: AI judge pairwise, 3 ronde, playoff top 100 — rank by win rate dari screenshot + outline source.
+- Gates: game/ ≤993 file/dir, ≤48 MiB, index.html ≤1 MiB; screenshot 3–4, masing-masing ≤256 KiB, long side ≤1280, short side ≥480; dossier ≤1,5 MiB, teks ≤163.840 B; authored ≥30% (thinking_reproduces).
+- main.ts (Node 22) di root repo: copy game/ + screenshots/ ke /output, tulis /output/dossier.json via vendor/makefun-game.ts buildDossier. JANGAN PERNAH rmSync /output (bikin grading exit code 1 — pakai mkdirSync + cpSync saja, pola starter).
+
+LANGKAH 1 — INIT (lakukan dulu, sebelum write apa pun):
+- cd ~/workspace/make-fun/2026-11-23/gta6-01/build && node ../kit/gta6-01-kit/cli/makefun.mjs init --keypair ~/workspace/make-fun/makefun-keypair.json
+- Catat baris "makefun anchor <root sha> round <round>" dari output — anchor HARUS muncul di tool result sebelum write pertama kamu. Kalau init gagal (mis. drand relay tidak terjangkau), lapor ke koordinator (parent), jangan akali sendiri.
+
+LANGKAH 2 — BANGUN GAME:
+- Repo build/ saat ini KOSONG kecuali .git (plain git init, tanpa commit). Semua file game kamu tulis fresh via write/edit tool di session ini. JANGAN shell-copy file dari luar repo (cp/mv) — file terhitung harus ditulis oleh kamu di sini.
+- Starter kit (kit/gta6-01-kit/starter/) BOLEH dibaca sebagai referensi pola (main.ts driver, serve.ts, shots.json, vendor/makefun-game.ts, struktur game/). vendor/makefun-game.ts HARUS byte-identik dengan copy kit — caranya: baca file kit-nya, lalu tulis ulang isinya via write call (byte-identik, bukan cp). File starter yang byte-identik tidak dihitung sebagai authored — itu sesuai aturan gate, bukan pelanggaran.
+- JANGAN copy screenshot starter (starter/screenshots/*) — screenshot harus render asli dari game KAMU.
+- Game yang dibangun: open-world crime game selengkap mungkin, static files, tanpa network request, keyboard + mouse, jalan di desktop Chrome. Yang dinilai judge (completeness): kota yang bisa dijelajahi jalan kaki + naik mobil, traffic + pedestrian, mobil bisa dicuri, wanted level + polisi yang merespons, misi + story, combat, HUD + minimap, start screen + save, polish (kontrol/kamera enak, efek, suara, menu). Konten 100% original — TIDAK ADA nama/karakter/map/art/musik dari Rockstar atau game komersial lain.
+- Teknologi: starter adalah game 2D top-down JavaScript polos (config/input/main/random/render/shots/world). Keputusan di tangan kamu: perpanjang struktur starter jadi kota yang lebih besar + semua sistem di atas, ATAU tulis fresh — tapi utamakan GAME YANG JADI + BISA DIMAINKAN + screenshot bagus, bukan ambisi 3D setengah jadi. Game harus benar-benar playable, bukan mockup.
+- main.ts: ikuti pola starter (mkdirSync + cpSync game/ + screenshots/ ke /output, buildDossier). Deterministik: 2 run harus byte-identik.
+- Screenshot 3–4 (PNG/JPEG, masing-masing ≤256 KiB, long side ≤1280, short side ≥480): render ASLI dari kode game kamu — serve game/ secara lokal, buka di headless browser di VM ini, mainkan (jalan kaki, nyetir, wanted/police, misi), screenshot tiap scene. Cek dulu tool screenshot yang tersedia (chromium headless? playwright? puppeteer?). Screenshot HARUS menunjukkan sistem-sistem di atas (kota + mobil + HUD/minimap + wanted). Kalau browser tidak tersedia di VM, lapor ke koordinator — jangan pakai gambar hasil generate AI atau copy dari mana pun.
+
+LANGKAH 3 — TEST + COMMIT:
+- Playtest: game buka di Chrome tanpa error (0 page error), bisa dimainkan dari start sampai misi, save jalan. Verifikasi determinism main.ts (2 run byte-identik).
+- Cek ukuran: game/ ≤48 MiB, index.html ≤1 MiB, tiap screenshot ≤256 KiB, dossier ≤1,5 MiB setelah main.ts jalan.
+- git add + git commit di build/ (commit message bebas, mis. "gta6-01: open-world crime game v1"). Catat commit sha + anchor round.
+
+WAKTU: deadline 22:00 WIB 24 Nov. Target selesai build + test + commit paling lambat ~12:00 WIB 24 Nov supaya ada waktu seal/bundle/check/submit. Kalau sudah ~14:00 WIB dan game belum playable, potong scope ke sistem inti (kota + mobil + wanted/polisi + 1 misi + HUD) daripada tidak submit.
+
+LAPOR balik ke koordinator (parent) saat selesai: commit sha, anchor round, ringkasan sistem yang jadi, hasil playtest (error 0?), daftar screenshot + ukurannya, dan apa pun yang gagal. Tulis juga BUILDER-STATUS.md di ~/workspace/make-fun/2026-11-23/gta6-01/ dengan info yang sama. Kalau ada blocker (browser tidak ada, init gagal, dsb.), STOP dan lapor — jangan diam-diam skip.

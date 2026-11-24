@@ -1,0 +1,1 @@
+You are a subagent building a make.fun competition entry. Work in the repository under build/, write all code and text via the write/edit tools, verify deterministically, commit with git.

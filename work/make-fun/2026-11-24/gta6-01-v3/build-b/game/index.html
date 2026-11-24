@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Solara Bay — Open World</title>
+<style>
+  html,body{margin:0;padding:0;background:#0b0e1a;height:100%;overflow:hidden;font-family:'Segoe UI',Arial,sans-serif}
+  #wrap{position:fixed;inset:0}
+  canvas{display:block;width:100vw;height:100vh}
+  #help{position:fixed;left:10px;bottom:8px;color:#cfe3ff;font-size:12px;opacity:.75;text-shadow:0 1px 2px #000;pointer-events:none;z-index:5}
+</style>
+</head>
+<body>
+<div id="wrap"><canvas id="game" width="1280" height="720"></canvas></div>
+<div id="help">WASD move/drive &nbsp; E enter/steal car &nbsp; F punch &nbsp; Mouse aim + click shoot &nbsp; R radio &nbsp; M save &nbsp; P pause &nbsp; H horn</div>
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>
