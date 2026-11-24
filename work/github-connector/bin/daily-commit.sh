@@ -69,6 +69,7 @@ rm -rf "$WORK_TMP"
   git -C "$CLONE" status --porcelain -- work/ | sed 's/^/ - /'
 } > "$SUMMARY"
 
-# 4. Push one commit via the GitHub API, then sync the clone.
+# 4. Push one commit via the GitHub API, then sync the clone to the new HEAD.
 python3 "$COMMIT_PY" "$CLONE" "Daily work $TODAY: $FOUND files"
-git -C "$CLONE" pull --quiet --ff-only origin main || true
+git -C "$CLONE" fetch --quiet origin
+git -C "$CLONE" reset --quiet --hard origin/main

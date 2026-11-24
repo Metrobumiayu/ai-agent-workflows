@@ -54,10 +54,15 @@ const c1t = await c1.text();
 fs.writeFileSync(path.join(outDir, `20261124-${stamp}-competitions.json`), c1t);
 let c1cursor = null;
 try { c1cursor = JSON.parse(c1t).next_cursor || null; } catch {}
-if (c1cursor) {
-  jobs.push(get(`https://make.fun/api/competitions?cursor=${encodeURIComponent(c1cursor)}`, H, `20261124-${stamp}-competitions-p2.json`));
-} else {
-  jobs.push(Promise.resolve({ file: `20261124-${stamp}-competitions-p2.json`, status: 'SKIP', bytes: 0 }));
+// follow all pages: list is 164 slugs (4 pages) as of 2026-11-24 12:47 WIB, not 100
+let page = 2;
+while (c1cursor && page <= 6) {
+  const r = await fetch(`https://make.fun/api/competitions?cursor=${encodeURIComponent(c1cursor)}`, { headers: H });
+  const t = await r.text();
+  fs.writeFileSync(path.join(outDir, `20261124-${stamp}-competitions-p${page}.json`), t);
+  jobs.push(Promise.resolve({ file: `20261124-${stamp}-competitions-p${page}.json`, status: r.status, bytes: t.length }));
+  try { c1cursor = JSON.parse(t).next_cursor || null; } catch { c1cursor = null; }
+  page++;
 }
 for (const s of details) jobs.push(get(`https://make.fun/api/competitions/${s}`, H, `20261124-${stamp}-detail-${s}.json`));
 for (const s of leaderboards) jobs.push(get(`https://make.fun/api/competitions/${s}/leaderboard`, H, `20261124-${stamp}-${s}-leaderboard.json`));

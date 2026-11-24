@@ -62,10 +62,24 @@ export function resolveCircle(G, e, r) {
   const b = collideBuildings(G, e.x, e.y, r);
   if (!b) return;
   const cx = clamp(e.x, b.x, b.x + b.w), cy = clamp(e.y, b.y, b.y + b.h);
-  const dx = e.x - cx, dy = e.y - cy, d = Math.hypot(dx, dy) || 1;
+  const dx = e.x - cx, dy = e.y - cy, d = Math.hypot(dx, dy);
+  if (d < 1) { pushOut(G, e, r); return; } // deep inside: extract along smallest penetration
   const push = r - d;
   if (push > 0) { e.x += (dx / d) * push; e.y += (dy / d) * push; }
   e.x = clamp(e.x, 30, 4770); e.y = clamp(e.y, 30, 3570);
+}
+/** Extract an entity overlapping a building along the smallest penetration axis. */
+export function pushOut(G, e, r) {
+  const b = collideBuildings(G, e.x, e.y, r);
+  if (!b) return false;
+  const left = e.x - b.x, right = b.x + b.w - e.x, top = e.y - b.y, bottom = b.y + b.h - e.y;
+  const m = Math.min(left, right, top, bottom);
+  if (m === left) e.x = b.x - r;
+  else if (m === right) e.x = b.x + b.w + r;
+  else if (m === top) e.y = b.y - r;
+  else e.y = b.y + b.h + r;
+  e.x = clamp(e.x, 30, 4770); e.y = clamp(e.y, 30, 3570);
+  return true;
 }
 
 // --- player ---
@@ -83,7 +97,7 @@ export function updatePlayer(G, dt, input) {
   resolveCircle(G, p, 14);
   p.x = clamp(p.x, 20, 4780); p.y = clamp(p.y, 20, 3580);
   // aim at mouse
-  if (input.mouseIn) p.aim = Math.atan2(input.mouseY - G.cam.y + p.y - (G.viewH / 2), input.mouseX - G.cam.x + p.x - (G.viewW / 2));
+  if (input.mouseIn) p.aim = Math.atan2((G.cam.y + input.mouseY) - p.y, (G.cam.x + input.mouseX) - p.x);
   // punch cooldown
   if (p.punchCd > 0) p.punchCd -= dt;
   if (p.shootCd > 0) p.shootCd -= dt;
@@ -109,6 +123,7 @@ export function updatePlayerCar(G, dt, input, car) {
     car.x -= Math.cos(car.angle) * car.speed * dt; car.y -= Math.sin(car.angle) * car.speed * dt;
     if (Math.abs(car.speed) > 120) { damageCar(G, car, Math.abs(car.speed) * 0.08); G.audio.crash(); addShake(G, 4); }
     car.speed *= -0.25;
+    pushOut(G, car, 20); // extract if still overlapping (e.g. spawned inside)
   }
   car.x = clamp(car.x, 20, 4780); car.y = clamp(car.y, 20, 3580);
   const p = G.player; p.x = car.x; p.y = car.y; p.angle = car.angle;
@@ -217,7 +232,7 @@ function updateTrafficCar(G, dt, car) {
   car.x += Math.cos(car.angle) * car.speed * dt;
   car.y += Math.sin(car.angle) * car.speed * dt;
   const b = collideBuildings(G, car.x, car.y, 18);
-  if (b) { car.x -= Math.cos(car.angle) * car.speed * dt; car.y -= Math.sin(car.angle) * car.speed * dt; car.speed = 0; car.angle += Math.PI / 2; }
+  if (b) { car.x -= Math.cos(car.angle) * car.speed * dt; car.y -= Math.sin(car.angle) * car.speed * dt; car.speed = 0; car.angle += Math.PI / 2; pushOut(G, car, 18); }
   // at intersections, sometimes turn
   const onV = G.city.vRoads.some((rx) => Math.abs(car.x - rx) < 12);
   const onH = G.city.hRoads.some((ry) => Math.abs(car.y - ry) < 12);
@@ -250,7 +265,7 @@ function updatePoliceCar(G, dt, car) {
   car.x += Math.cos(car.angle) * car.speed * dt;
   car.y += Math.sin(car.angle) * car.speed * dt;
   const b = collideBuildings(G, car.x, car.y, 18);
-  if (b) { car.x -= Math.cos(car.angle) * car.speed * dt; car.y -= Math.sin(car.angle) * car.speed * dt; car.speed *= 0.4; car.angle += 0.6; }
+  if (b) { car.x -= Math.cos(car.angle) * car.speed * dt; car.y -= Math.sin(car.angle) * car.speed * dt; car.speed *= 0.4; car.angle += 0.6; pushOut(G, car, 18); }
   car.siren += dt;
   if (car.siren > 0.9) { car.siren = 0; G.audio.siren(); }
   // ram the player
@@ -276,7 +291,7 @@ function updateRivalCar(G, dt, car) {
   car.x += Math.cos(car.angle) * car.speed * dt;
   car.y += Math.sin(car.angle) * car.speed * dt;
   const b = collideBuildings(G, car.x, car.y, 18);
-  if (b) { car.x -= Math.cos(car.angle) * car.speed * dt; car.y -= Math.sin(car.angle) * car.speed * dt; car.speed *= 0.5; car.angle += 0.8; }
+  if (b) { car.x -= Math.cos(car.angle) * car.speed * dt; car.y -= Math.sin(car.angle) * car.speed * dt; car.speed *= 0.5; car.angle += 0.8; pushOut(G, car, 18); }
   if (dist2(car.x, car.y, cp.x, cp.y) < 90 * 90) car.checkpoint++;
 }
 
@@ -289,8 +304,6 @@ export function updatePeds(G, dt) {
       ped.panic -= dt;
       ped.angle = Math.atan2(ped.y - p.y, ped.x - p.x);
       ped.speed = 260;
-    } else if (d < 120 && (p.inCar ? Math.abs(G.playerCarSpeed || 0) > 200 : false)) {
-      ped.panic = 2; G.audio.tone && null;
     } else if (d < 60 && p.inCar) { ped.panic = 2; }
     else {
       ped.wait -= dt;
@@ -382,7 +395,13 @@ export function ensurePolice(G) {
 }
 export function updateWanted(G, dt) {
   const p = G.player;
-  if (p.wanted === 0) return;
+  if (p.wanted === 0) {
+    // stand down: no heat means no pursuit
+    for (const c of G.cars) if (c.ai === 'police') { c.ai = 'traffic'; c.targetSpeed = 120; }
+    if (G.footPolice.length) G.footPolice = [];
+    G.heli.active = false;
+    return;
+  }
   const nearCop = G.cars.some((c) => c.ai === 'police' && !c.dead && dist2(c.x, c.y, p.x, p.y) < 700 * 700)
     || G.footPolice.some((c) => dist2(c.x, c.y, p.x, p.y) < 500 * 500)
     || G.heli.active;

@@ -121,15 +121,15 @@ export const MISSIONS = [
   {
     id: 'race', num: 6, name: 'Bay Grand Prix', desc: 'Six checkpoints across the city against three rivals. Win the race.',
     start(G) {
-      const cps = [{ x: 2300, y: 600 }, { x: 4300, y: 1000 }, { x: 4300, y: 2100 }, { x: 1500, y: 2100 }, { x: 1100, y: 3100 }, { x: 2300, y: 2050 }];
+      const cps = [{ x: 2200, y: 600 }, { x: 4200, y: 1000 }, { x: 4200, y: 2200 }, { x: 1400, y: 2200 }, { x: 1000, y: 3000 }, { x: 2200, y: 2200 }];
       G.missionData = { checkpoints: cps, i: 0, over: false };
-      // 3 rivals line up at the start
-      const spots = [{ x: 2250, y: 1950 }, { x: 2350, y: 1950 }, { x: 2300, y: 1900 }];
+      // 3 rivals line up at the start, on the road
+      const spots = [{ x: 2100, y: 2214 }, { x: 2200, y: 2214 }, { x: 2300, y: 2214 }];
       spots.forEach((s, i) => {
         const c = makeCar(G, 'sports', s.x, s.y, -Math.PI / 2, 'rival');
         c.rival = true; c.checkpoint = 0; c.rivalSkill = i; c.color = ['#d04040', '#40a0d0', '#e8c020'][i];
       });
-      setMarker(G, 2300, 600, 'Checkpoint 1/6');
+      setMarker(G, 2200, 600, 'Checkpoint 1/6');
       G.message = 'Race! Hit all 6 checkpoints before the rivals.'; G.messageT = 3;
     },
     update(G) {
@@ -158,7 +158,7 @@ export const MISSIONS = [
     id: 'taxi', num: 7, name: 'Cab Fare', desc: 'Drive a taxi. Three fares around the city — tips for fast drops.',
     start(G) {
       G.missionData = { fare: 0, stage: 'pickup', t: 0 };
-      G.taxiSpots = [{ px: 1500, py: 1300, dx: 3900, dy: 600 }, { px: 3300, py: 1100, dx: 1300, dy: 3100 }, { px: 2400, py: 2500, dx: 4200, dy: 1700 }];
+      G.taxiSpots = [{ px: 1400, py: 1400, dx: 4200, dy: 600 }, { px: 3400, py: 1000, dx: 1000, dy: 3000 }, { px: 2200, py: 2600, dx: 4200, dy: 1800 }];
       const s = G.taxiSpots[0];
       setMarker(G, s.px, s.py, 'Passenger 1/3');
       G.message = 'Grab a taxi (yellow cab) and pick up the passenger.'; G.messageT = 3;
@@ -226,14 +226,14 @@ export const MISSIONS = [
   },
   {
     id: 'finale', num: 10, name: 'Solara Sunset', desc: 'The finale. Steal a sports car, lose the heat, deliver the package, vanish.',
-    start(G) { G.missionData = { step: 0 }; setMarker(G, 2300, 2050, 'Steal a sports car'); G.message = 'Finale: steal a sports car!'; G.messageT = 3; },
+    start(G) { G.missionData = { step: 0 }; setMarker(G, 2200, 2200, 'Steal a sports car'); G.message = 'Finale: steal a sports car!'; G.messageT = 3; },
     update(G, dt) {
       const d = G.missionData, p = G.player;
       if (d.step === 0) {
         const car = G.cars.find((c) => c.id === p.carId);
         if (p.inCar && car && car.type === 'sports') {
           d.step = 1; G.player.wanted = 3; G.wantedTimer = 14; addWanted(G, 0);
-          setMarker(G, 2300, 2050, 'Lose the cops (0 stars)');
+          setMarker(G, 2200, 2200, 'Lose the cops (0 stars)');
           G.message = 'Heat is on — lose the cops!'; G.messageT = 2.5;
         }
       } else if (d.step === 1) {

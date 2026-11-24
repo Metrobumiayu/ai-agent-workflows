@@ -120,7 +120,7 @@ export function buildCity(seed) {
   ];
   const hospital = { x: 2300, y: 1050, name: 'Solara General' };
   const bank = { x: 2400, y: 1800, name: 'Solara National Bank' };
-  const start = { x: 2300, y: 2050 };
+  const start = { x: 2300, y: 2200 };
 
   return { buildings, trees, lamps, containers, cranes, boats, planes, lights, shops, hospital, bank, start, vRoads, hRoads, onRoad, inWater, onRunway };
 }
