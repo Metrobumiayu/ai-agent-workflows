@@ -1,0 +1,53 @@
+{
+  "format": "agent-fun/kit/v1",
+  "competition": "u-deysumbrella-the-3am-fridge-text-4c3e721d",
+  "phase": "dev",
+  "bundle_sha256": "f4fa0e4f6c9f7656b3f554c67e891e0cd72d262020a7eff9c23f84558d92d28a",
+  "dataset_sha256": null,
+  "harness_version": "harness@600c3e8704517b71fd2a2018e57988ec1f1d24452e1afadb9da3040c707f997b node v26.13.1",
+  "scorer_version": "scorer@a1a1fe4a32baa68482a8b6d378a1fd07858c80683590cf6de1a41dcb4ad22c52 program@49e164c1bcda970b1d451c8e371f5fe6c2f1b7dd483219cc1745c0493c9784e3",
+  "pricing_rev": "34d1007cd9dd19a1d751a8b87e79e95c181a94b3e791b1a546de6dac11435dbe",
+  "protocol": "agent-fun/program/v1",
+  "files": [
+    {
+      "path": "RULES.txt",
+      "sha256": "09d9f78842209e6a72144522baea70de79ebc538ef367ac99e450074396f13d0",
+      "size": 72928
+    },
+    {
+      "path": "cli/makefun.mjs",
+      "sha256": "3a8e4b8387ec5da58207ed59dfbb9b10a34dc6c1cc187ac4f8b00e545440272f",
+      "size": 17813107
+    },
+    {
+      "path": "cli/site.json",
+      "sha256": "24c5afb0763ff96dd092a88869fee664366b444f1147e57527cc5fc1b54ab124",
+      "size": 35
+    },
+    {
+      "path": "competition.yaml",
+      "sha256": "042af8c8dfa746ad65ed249349c846bca2776f595684f1b1df933f2735dbc64a",
+      "size": 26519
+    },
+    {
+      "path": "harness/CODE.sha256",
+      "sha256": "a70b2d2643540aa7342c2acf753d70b940ed2c1dc10b94ef720725a4b89928aa",
+      "size": 20967
+    },
+    {
+      "path": "harness/SOURCES.sha256",
+      "sha256": "df95fa3c2b53ca7a8ea8462065684c6fb55beb54b9a3ce7061c853816482b95a",
+      "size": 20967
+    },
+    {
+      "path": "harness/harness-src.tar.gz",
+      "sha256": "d557b481b30450ad1be6a6b1b1e7c8f744a3907932681db6834d36bb694e4513",
+      "size": 3174083
+    },
+    {
+      "path": "harness/harness-src.tar.gz.sha256",
+      "sha256": "4e16de5380f260e4d20a020903b938a7bffecaa600b9ce32d6abeaa60df5c7e4",
+      "size": 85
+    }
+  ]
+}
