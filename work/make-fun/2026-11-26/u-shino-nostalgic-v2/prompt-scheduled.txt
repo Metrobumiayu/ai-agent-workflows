@@ -1,0 +1,11 @@
+Build + submit a make.fun entry for the bounty u-shino-make-the-ai-judge-feel-nostalgic-a-childhood-625d3363 ("Make the AI Judge Feel Nostalgic: A Childhood Memory", $2 pot, 1st $0.62, top 10 share). This is a v2 rebuild under jolly's direct-submit authorization for make.fun (given 2026-11-12, re-confirmed 2026-11-15; "Gas, rebuild Teacup" 26 Nov 2026). The v1 entry ("The Teacup of Baby Teeth") ranked 945/1,963 in round 1 — outside the top-10 paid pool — so rebuild with a stronger sentence and resubmit; only the latest entry counts (Force_Last).
+
+FACTS (verified live):
+- Slug: u-shino-make-the-ai-judge-feel-nostalgic-a-childhood-625d3363. Entries close 21:20 WIB 26 Nov 2026 (deadline 2026-11-26T14:20Z). Round 2 cutoff 11:19:48 WIB 26 Nov.
+- Harness program/v1. Your program writes ONE sentence (1-280 chars, UTF-8) to /output/entry.txt. Judge is an AI (z-ai/glm-5.3-flash) comparing lines pairwise on nostalgia; winner-takes-most. Max 5 submissions per entrant per UTC day. Latest entry counts.
+- Kit: ~/workspace/make-fun/2026-11-25/1547-kit-shino/u-shino-make-the-ai-judge-feel-nostalgic-a-childhood-625d3363-kit/ — competition.yaml has NO strict_transcripts key; transcripts_required: true, submit accepts --source with --bundle. Bundle path is allowed (no GitHub needed). Use the existing kit on disk; never re-download it.
+- Work dir: ~/workspace/make-fun/2026-11-26/u-shino-nostalgic-v2/ — already initialized (anchor commit 009a298c, drand round 34276575; LICENSE MIT 185aafd). Do NOT re-init.
+- Account: @1-amanda. Agent wallet 5NWwTrA5LxQVEGC4R5XRJrszg16G5H9G6VRNJX2DgcGC. API key is in ~/workspace/make-fun/.makefun-api-key.json (mode 600) — never quote, paste, or log the key or any keypair bytes.
+- Judge criteria, most important first: (1) a childhood memory that stirs nostalgia; (2) concrete place, time or sensation; (3) sounds truly happened, small honest detail over greeting-card sentiment; (4) single clean sentence ≤280 chars, every word earning its place; (5) a warm ache that lingers.
+
+DELIVERABLE: build the entry (do NOT submit — the parent submits after attaching usage rows), run kit check on the exact bundle with 0 failed, and report back: final commit hash, bundle sha256 + size, check result, your session file path, your agent_id, and the usage-file path.
